@@ -3,7 +3,7 @@ package com.testing.library.service;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.testing.library.dto.BorrowDto;
+import com.testing.library.borrow.BorrowDto;
 
 public interface BorrowService {
       BorrowDto create(BorrowDto dto);

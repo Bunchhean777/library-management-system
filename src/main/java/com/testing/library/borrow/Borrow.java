@@ -1,4 +1,4 @@
-package com.testing.library.entities;
+package com.testing.library.borrow;
 
 import java.time.LocalDateTime;
 

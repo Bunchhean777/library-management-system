@@ -1,10 +1,9 @@
-package com.testing.library.repository;
+package com.testing.library.borrow;
+
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
-import com.testing.library.entities.Borrow;
-import java.util.List;
 
 
 @Repository

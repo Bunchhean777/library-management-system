@@ -1,8 +1,10 @@
-package com.testing.library.entities;
+package com.testing.library.member;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.testing.library.borrow.Borrow;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -38,5 +40,5 @@ public class Member {
     private LocalDateTime createAt; 
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private List<Borrow> borrow = new ArrayList<>();
+    private final List<Borrow> borrow = new ArrayList<>();
 }

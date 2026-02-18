@@ -1,7 +1,9 @@
-package com.testing.library.entities;
+package com.testing.library.book;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.testing.library.borrow.Borrow;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -36,6 +38,6 @@ public class Book {
     private int quantity;
 
     @OneToMany(mappedBy= "book", cascade= CascadeType.ALL)
-    private List<Borrow> borrows = new ArrayList<>();
+    private final List<Borrow> borrows = new ArrayList<>();
 
 }

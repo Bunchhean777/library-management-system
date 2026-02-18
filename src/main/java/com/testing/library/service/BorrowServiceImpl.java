@@ -6,16 +6,16 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.testing.library.dto.BorrowDto;
-import com.testing.library.entities.Book;
-import com.testing.library.entities.Borrow;
-import com.testing.library.entities.Member;
-import com.testing.library.exception.BadRequestException;
-import com.testing.library.exception.ResourceNotFoundException;
-import com.testing.library.mapper.BorrowMapper;
-import com.testing.library.repository.BookRepository;
-import com.testing.library.repository.BorrowRepository;
-import com.testing.library.repository.MemberRepository;
+import com.testing.library.book.Book;
+import com.testing.library.book.BookRepository;
+import com.testing.library.borrow.Borrow;
+import com.testing.library.borrow.BorrowDto;
+import com.testing.library.borrow.BorrowMapper;
+import com.testing.library.borrow.BorrowRepository;
+import com.testing.library.common.exception.BadRequestException;
+import com.testing.library.common.exception.ResourceNotFoundException;
+import com.testing.library.member.Member;
+import com.testing.library.member.MemberRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 

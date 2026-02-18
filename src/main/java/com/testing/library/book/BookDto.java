@@ -1,4 +1,4 @@
-package com.testing.library.dto;
+package com.testing.library.book;
 
 import java.util.List;
 

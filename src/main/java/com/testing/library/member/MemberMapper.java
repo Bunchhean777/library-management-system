@@ -1,10 +1,8 @@
-package com.testing.library.mapper;
+package com.testing.library.member;
 
 import java.util.List;
 
-import com.testing.library.dto.MemberDto;
-import com.testing.library.entities.Borrow;
-import com.testing.library.entities.Member;
+import com.testing.library.borrow.Borrow;
 
 public class MemberMapper {
 

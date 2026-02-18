@@ -1,9 +1,8 @@
-package com.testing.library.mapper;
+package com.testing.library.borrow;
 
-import com.testing.library.dto.BorrowDto;
-import com.testing.library.entities.Book;
-import com.testing.library.entities.Borrow;
-import com.testing.library.entities.Member;
+import com.testing.library.book.Book;
+import com.testing.library.member.Member;
+
 
 public class BorrowMapper {
 

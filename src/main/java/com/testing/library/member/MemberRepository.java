@@ -1,9 +1,7 @@
-package com.testing.library.repository;
+package com.testing.library.member;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
-import com.testing.library.entities.Member;
 
 @Repository
 public interface MemberRepository extends  JpaRepository<Member, Long>{

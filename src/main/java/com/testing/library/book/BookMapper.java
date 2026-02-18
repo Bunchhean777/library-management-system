@@ -1,10 +1,8 @@
-package com.testing.library.mapper;
+package com.testing.library.book;
 
 import java.util.List;
 
-import com.testing.library.dto.BookDto;
-import com.testing.library.entities.Book;
-import com.testing.library.entities.Borrow;
+import com.testing.library.borrow.Borrow;
 
 public class BookMapper {
 
