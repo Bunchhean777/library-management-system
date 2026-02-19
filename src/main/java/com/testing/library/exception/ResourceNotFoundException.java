@@ -1,4 +1,4 @@
-package com.testing.library.common.exception;
+package com.testing.library.exception;
 
 public class ResourceNotFoundException extends RuntimeException{
       public ResourceNotFoundException(String message) {

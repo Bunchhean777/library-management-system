@@ -1,4 +1,4 @@
-package com.testing.library.common.record;
+package com.testing.library.record;
 
 import java.time.Instant;
 

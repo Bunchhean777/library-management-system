@@ -1,129 +1,64 @@
 package com.testing.library.service;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.stereotype.Service;
 
-import com.testing.library.book.Book;
-import com.testing.library.book.BookRepository;
-import com.testing.library.borrow.Borrow;
-import com.testing.library.borrow.BorrowDto;
-import com.testing.library.borrow.BorrowMapper;
-import com.testing.library.borrow.BorrowRepository;
-import com.testing.library.common.exception.BadRequestException;
-import com.testing.library.common.exception.ResourceNotFoundException;
-import com.testing.library.member.Member;
-import com.testing.library.member.MemberRepository;
+import com.testing.library.enums.BorrowStatus;
+import com.testing.library.exception.BusinessException;
+import com.testing.library.exception.ResourceNotFoundException;
+import com.testing.library.mapper.BorrowMapper;
+import com.testing.library.model.entities.Book;
+import com.testing.library.model.entities.Borrow;
+import com.testing.library.model.entities.Member;
+import com.testing.library.model.io.BorrowResponseDto;
+import com.testing.library.repository.BookRepository;
+import com.testing.library.repository.BorrowRepository;
+import com.testing.library.repository.MemberRepository;
 
-import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 
 @Service
 public class BorrowServiceImpl implements BorrowService{
 
-      private final BorrowRepository borrowRepo;
-      private final BookRepository bookRepo;
-      private final MemberRepository memberRepo;
+      private final BorrowRepository borrowRepository;
+      private final BookRepository bookRepository;
+      private final MemberRepository memberRepository;
+      private final BorrowMapper borrowMapper;
 
       public BorrowServiceImpl(
-            final BorrowRepository borrowRepo,
-            final BookRepository bookRepo, 
-            final MemberRepository memberRepo
-      ) {
-            this.borrowRepo = borrowRepo;
-            this.bookRepo = bookRepo;
-            this.memberRepo = memberRepo;
+            BorrowRepository borrowRepository,
+            BookRepository bookRepository,
+            MemberRepository memberRepository,
+            BorrowMapper borrowMapper
+      ){
+            this.borrowRepository = borrowRepository;
+            this.bookRepository = bookRepository;
+            this.memberRepository = memberRepository;
+            this.borrowMapper = borrowMapper;
       }
 
       @Override
-      public BorrowDto create(BorrowDto dto) {
-
-            if (dto.getBookId() == null) {
-                  throw new BadRequestException("Book id is required.");
-            }
-            if (dto.getBorrowDate() == null) {
-                  dto.setBorrowDate(LocalDateTime.now());
-            }
-
-            Book book = bookRepo.findById(dto.getBookId())
-                  .orElseThrow(() -> new ResourceNotFoundException("Book not found: " + dto.getBookId()));
-
-            Member member = memberRepo.findById(dto.getMemberId())
-                  .orElseThrow(() -> new ResourceNotFoundException("Member not found: " + dto.getMemberId()));
-
-            if (book.getQuantity() != 0 && book.getQuantity() <= 0) {
-                  throw new BadRequestException("Book is out of stock");
-            }
-
-            Borrow borrow = BorrowMapper.toBorrow(dto, book, member);
-            Borrow borrowed = borrowRepo.save(borrow);
-
-            if (book.getQuantity() != 0) {
-                  book.setQuantity(book.getQuantity() - 1);
-            }
-
-            return BorrowMapper.toDto(borrowed);
-      }
-
-      @Override
-      public BorrowDto findByid(Long id, BorrowDto dto) {
-            Borrow borrow = borrowRepo.findById(id)
-                  .orElseThrow(() -> new ResourceNotFoundException("Borrow not found: " + id));
-            return BorrowMapper.toDto(borrow);
-      }
-
-      @Override
-      public List<BorrowDto> findAllBorrows() {
-            return borrowRepo.findAll()
-                  .stream()
-                  .map(BorrowMapper::toDto)
-                  .toList();
-      }
-
-      @Override
-      public void deleteBorrow(Long id) {
-            Borrow borrow = borrowRepo.findById(id)
-                  .orElseThrow(() -> new ResourceNotFoundException("Borrow not found: " + id));
-
-            if (borrow.getReturnDate() == null) {
-                  Book book = borrow.getBook();
-                  if (book.getQuantity() != 0) {
-                        book.setQuantity(book.getQuantity() + 1);
-                  }
-            }
+      @Transactional
+      public BorrowResponseDto borrow(BorrowResponseDto request) {
+            Book book = bookRepository.findById(request.bookId())
+                  .orElseThrow(() -> new ResourceNotFoundException("Book not found : " + request.bookId()));
+            Member member = memberRepository.findById(request.memberId())
+                  .orElseThrow(() -> new ResourceNotFoundException("Member not found : " + request.memberId()));
             
-            borrowRepo.delete(borrow);
+            Borrow borrow = Borrow.create(book, member);
+            Borrow saved = borrowRepository.save(borrow);
+            return borrowMapper.toResponse(saved);
       }
 
       @Override
-      public BorrowDto updateBorrow(Long id, LocalDateTime returnDate) {
-
-        Borrow borrow = borrowRepo.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Borrow not found: " + id));
-
-        if (borrow.getReturnDate() != null) {
-            throw new BadRequestException("This borrow is already returned");
-        }
-
-        Book book = borrow.getBook();
-
-        if (book.getQuantity() != 0) {
-            book.setQuantity(book.getQuantity() + 1);
-        }
-
-      LocalDateTime returnDateTime = Optional.ofNullable(returnDate).orElse(LocalDateTime.now());
-      borrow.setReturnDate(returnDateTime);
-
-        return BorrowMapper.toDto(borrow);
-      }
-
-      @Override
-      public List<BorrowDto> getByBookId(Long id) {
-            return borrowRepo.findByBookId(id)
-                  .stream()
-                  .map(BorrowMapper::toDto)
-                  .toList();
+      @Transactional
+      public BorrowResponseDto returnBook(Long borrowId) {
+            Borrow borrow = borrowRepository.findById(borrowId)
+                  .orElseThrow(() -> new ResourceNotFoundException("Book not found : " + borrowId));
+            if (borrow.getStatus().equals(BorrowStatus.RETURNED)) {
+                  throw new BusinessException("Book already returned");
+            }
+            borrow.markReturned();
+            return borrowMapper.toResponse(borrow);
       }
 
 }

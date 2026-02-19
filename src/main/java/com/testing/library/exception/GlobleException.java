@@ -1,4 +1,4 @@
-package com.testing.library.common.exception;
+package com.testing.library.exception;
 
 import java.time.Instant;
 
@@ -8,7 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.testing.library.common.record.ApiError;
+import com.testing.library.record.ApiError;
 
 import jakarta.servlet.http.HttpServletRequest;
 

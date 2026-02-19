@@ -1,4 +1,4 @@
-package com.testing.library.common.exception;
+package com.testing.library.exception;
 
 public class BusinessException extends RuntimeException{
       public BusinessException(String message) {

@@ -1,4 +1,4 @@
-package com.testing.library.member;
+package com.testing.library.model.io;
 
 import java.time.LocalDateTime;
 import java.util.List;
